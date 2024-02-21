@@ -2,5 +2,8 @@
 src = "src"
 out = "out"
 libs = ["lib"]
+remappings = ["@chainlink/contracts/=lib/chainlink-brownie-contracts/contracts/"] #this line is telling my contract that anywhere you see @chainlink/contracts take me to lib/chainlink-brownie-contracts/contracts as this is where the files are
+#ffi = true  #if true if means you allow foundry to run commands directly on your machine
+fs_permissions = [{ access = "read", path = "./broadcast" }]
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
