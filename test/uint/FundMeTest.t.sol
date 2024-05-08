@@ -22,8 +22,8 @@ contract FundMeTest is Test {
 
     function testMininmumDollarIsFive() public {
         assertEq(fundMe.MINIMUM_USD(), 5e18); //Testing if minimum usd is 5e18
-        //console.log(number); //run with forge test --vv the vv helps with visibility it can be vvvvv etc
-        //console.log("Hello world");
+            //console.log(number); //run with forge test --vv the vv helps with visibility it can be vvvvv etc
+            //console.log("Hello world");
     }
 
     function testOwnerIsMsgSender() public {
@@ -96,7 +96,7 @@ contract FundMeTest is Test {
         //Act: Then the action i want to test.
         //uint256 gasStart = gasleft(); // 1000  gasleft() built into solidity tells you gas left.
         // vm.txGasPrice(GAS_PRICE);
-        vm.prank(fundMe.getOwner()); // c: 200
+        vm.prank(fundMe.getOwner()); // c: 200   only the owner can make withdrawal.
         fundMe.withdraw(); //This is what we are testing we put it in the act section.
 
         // uint256 gasEnd = gasleft();  // 800
@@ -107,10 +107,7 @@ contract FundMeTest is Test {
         uint256 endingOwnerBalance = fundMe.getOwner().balance;
         uint256 endingFundMeBalance = address(fundMe).balance;
         assertEq(endingFundMeBalance, 0);
-        assertEq(
-            startingFundMeBalance + startingOwnerBalance,
-            endingOwnerBalance
-        );
+        assertEq(startingFundMeBalance + startingOwnerBalance, endingOwnerBalance); //this is means startingFundMeBalance plus startingOwnerBalance equals endingFundMeBalance. 
     }
 
     function testWithdrawFromMultipleFunders() public funded {
@@ -134,10 +131,7 @@ contract FundMeTest is Test {
 
         //assert
         assert(address(fundMe).balance == 0);
-        assert(
-            startingFundMeBalance + startingOwnerBalance ==
-                fundMe.getOwner().balance
-        );
+        assert(startingFundMeBalance + startingOwnerBalance == fundMe.getOwner().balance);
     }
 
     function testWithdrawFromMultipleFundersCheaper() public funded {
@@ -146,8 +140,8 @@ contract FundMeTest is Test {
         uint160 startingFunderIndex = 1; //if you wanna use numbers to generate addresses those numbers have to be uint160
         for (uint160 i = startingFunderIndex; i < numberOfFunders; i++) {
             // vm.prank new address
-            //vm.deal new address
-            hoax(address(i), SEND_VALUE); //This line equal the two line above.
+            //vm.deal  deal new address some money
+            hoax(address(i), SEND_VALUE); //hoax does prank and deal combine. 
             fundMe.fund{value: SEND_VALUE}();
         }
 
@@ -161,9 +155,6 @@ contract FundMeTest is Test {
 
         //assert
         assert(address(fundMe).balance == 0);
-        assert(
-            startingFundMeBalance + startingOwnerBalance ==
-                fundMe.getOwner().balance
-        );
+        assert(startingFundMeBalance + startingOwnerBalance == fundMe.getOwner().balance);
     }
 }
